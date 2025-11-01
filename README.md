@@ -1,5 +1,5 @@
 Fork of Review [Hotmouse](https://ankiweb.net/shared/info/1928346827). 
-Extended Review Hotmouse add-on functionality to card overview screen 
+Extended Review Hotmouse add-on functionality to card overview screen. 
 For more info read original description.
 
 [install via anki web](https://ankiweb.net/shared/info/1054369752)
