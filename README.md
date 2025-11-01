@@ -1,8 +1,12 @@
-[Fork of Review [Hotmouse](https://ankiweb.net/shared/info/1928346827). For more info read original description.
+Fork of Review [Hotmouse](https://ankiweb.net/shared/info/1928346827). For more info read original description.
+
+
+[install via anki web](https://ankiweb.net/shared/info/1054369752)
+[gtihub](https://github.com/athulkrishna2015/Review-Hotmouse-Plus)
 
 # Changelog
 
-## [2.3.0] - 2025-11-01
+## 2025-11-01
 
 ### Added
 - User-configurable Overview hotkeys with a new “o_” scope, e.g., `o_wheel_down` for the deck overview screen. (event.py, config.py)
@@ -28,4 +32,3 @@
 
 ### Notes
 - No content changes to `web/detect_wheel.js`; it is now injected for Overview in addition to Reviewer. (event.py)
-](https://github.com/athulkrishna2015/Review-Hotmouse-Plus)
