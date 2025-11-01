@@ -2,7 +2,8 @@ Fork of Review [Hotmouse](https://ankiweb.net/shared/info/1928346827). For more 
 
 
 [install via anki web](https://ankiweb.net/shared/info/1054369752)
-[gtihub](https://github.com/athulkrishna2015/Review-Hotmouse-Plus)
+
+[gtihub](https://github.com/athulkrishna2015/Review-Hotmouse-Plus-Overview)
 
 # Changelog
 
