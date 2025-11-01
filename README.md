@@ -1,5 +1,3 @@
-<img width="897" height="674" alt="Screenshot_20251101_165831" src="https://github.com/user-attachments/assets/a46bb607-84b5-4564-b92d-6cffda38a4f9" />Fork of Review [Hotmouse](https://ankiweb.net/shared/info/1928346827). For more info read original description.
-
 # Changelog
 
 ## [2.14.0] - 2025-11-01
