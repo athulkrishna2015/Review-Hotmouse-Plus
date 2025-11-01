@@ -1,3 +1,5 @@
+Fork of Review [Hotmouse](https://ankiweb.net/shared/info/1928346827). For more info read original description.
+
 # Changelog
 
 ## [2.14.0] - 2025-11-01
