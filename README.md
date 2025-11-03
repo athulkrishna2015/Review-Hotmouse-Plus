@@ -1,14 +1,38 @@
-Fork of Review [Hotmouse](https://ankiweb.net/shared/info/1928346827). 
-Extended Review Hotmouse add-on functionality to card overview screen. 
-For more info read original description.
+# [Review Hotmouse Plus Overview](https://github.com/athulkrishna2015/Review-Hotmouse-Plus-Overview/)
 
-[install via anki web](https://ankiweb.net/shared/info/1054369752)
+[Install via ankiweb](https://ankiweb.net/shared/info/1054369752)
 
-[gtihub](https://github.com/athulkrishna2015/Review-Hotmouse-Plus-Overview)
+Configurable mouse hotkeys for Anki’s review workflow, now extended to the Overview screen and Congratulations screen with a built‑in deck_browser action to jump to the Decks selector.  
+
+## Configuration
+
+Open Tools → Add‑ons → Review Hotmouse → Config and use the tabs:
+- Overview Hotkeys: add/edit `o_*` mappings (for example, `o_click_right → deck_browser`, `o_wheel_down → study_now`).  
+- Congratulations Hotkeys: add/edit `c_*` mappings (for example, `c_click_right → deck_browser`).  
+- Question/Answer Hotkeys: unchanged; continue to use again/hard/good/easy/undo/etc.  
+
+## Acknowledgments
+
+This project is a fork and extension of the original “[Review Hotmouse](https://ankiweb.net/shared/info/1928346827)” Anki add‑on; full credit for the concept and foundational code goes to the original author(s)
+
+For more info read original [description](https://ankiweb.net/shared/info/1928346827).
+
 
 # Changelog
 
-## 2025-11-01
+## [2.4.3] 2025-11-03
+
+- Added Overview Hotkeys tab with full press/click/wheel mapping support (scope: o_*).
+- Added Congratulations Hotkeys tab with full press/click/wheel mapping support (scope: c_*).
+- Introduced deck_browser action to open the Decks selector (equivalent to key D).
+- Set defaults: o_click_right → deck_browser and c_click_right → deck_browser.
+- Unified right‑click handling through the shortcut engine and suppressed context menus when right‑click is mapped.
+- Kept study_now and overview wheel detection with safe JS injection; preserved fallback when no o_wheel_* mapping is configured.
+### Defaults and Reset
+
+- Shipped defaults include `o_click_right → deck_browser` and `c_click_right → deck_browser`.  
+
+## [2.3.0] - 2025-11-01
 
 ### Added
 - User-configurable Overview hotkeys with a new “o_” scope, e.g., `o_wheel_down` for the deck overview screen. (event.py, config.py)

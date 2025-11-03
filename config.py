@@ -8,17 +8,21 @@ from .event import ACTION_OPTS, Button, refresh_config
 
 def general_tab(conf_window: ConfigWindow) -> None:
     tab = conf_window.add_tab("General")
+
     tab.number_input(
         "threshold_wheel_ms",
         "Mouse scroll threshold (1000 is 1s)",
         tooltip="How long a delay between subsequent scroll actions?",
         maximum=3000,
     )
+
     tab.checkbox(
         "default_enabled",
         "add-on is enabled at start",
         "If you uncheck this box, the add-on will start as turned off when Anki is launched",
     )
+
+    # Removed old right-click checkboxes; use the Overview/Congrats tabs to bind actions.
     tab.checkbox("tooltip", "When triggered, show action name")
     tab.checkbox("z_debug", "Debugging: Show hotkey on mouse action")
     tab.stretch()
@@ -52,20 +56,17 @@ class DDConfigLayout(ConfigLayout):
         dropdown.setCurrentIndex(options.index(current))
         self.addWidget(dropdown)
         self.dropdowns.append(dropdown)
-
         if is_mode:
             ddidx = len(self.dropdowns) - 1
             dropdown.currentIndexChanged.connect(
                 lambda optidx, d=ddidx: self.on_mode_change(optidx, d)
             )
-
         return dropdown
 
     def on_mode_change(self, optidx: int, ddidx: int) -> None:
         """Handler for when mode dropdown changes"""
         mode = OPTS.mode[optidx]
         dropdowns = self.dropdowns
-
         if mode == "press":
             dd = dropdowns.pop(ddidx + 1)
             self.removeWidget(dd)
@@ -79,7 +80,6 @@ class DDConfigLayout(ConfigLayout):
                 dd = dropdowns.pop()
                 self.removeWidget(dd)
                 dd.deleteLater()
-
             if mode == "click":
                 self.create_dropdown(OPTS.button[0], OPTS.button)
             else:  # mode == "wheel"
@@ -88,15 +88,13 @@ class DDConfigLayout(ConfigLayout):
 
 class HotkeyTabManager:
     def __init__(
-        self, tab: ConfigLayout, side: Union[Literal["q"], Literal["a"], Literal["o"]]
+        self, tab: ConfigLayout, side: Union[Literal["q"], Literal["a"], Literal["o"], Literal["c"]]
     ) -> None:
         self.tab = tab
         self.config_window = tab.config_window
         self.side = side
-
         # For each row, (hotkey_layout, action_layout)
         self.layouts: List[Tuple[DDConfigLayout, DDConfigLayout]] = []
-
         self.setup_tab()
 
     def setup_tab(self) -> None:
@@ -105,10 +103,13 @@ class HotkeyTabManager:
 
         btn_layout = tab.hlayout()
         add_btn = QPushButton("+ Add New ")
-        # Default new row per context: wheel_down for Overview feels natural
-        default_hotkey = (
-            f"{self.side}_wheel_down" if self.side == "o" else f"{self.side}_click_right"
-        )
+        # Default new row per context: wheel_down for Overview, right-click for others
+        default_hotkey = {
+            "o": "o_wheel_down",
+            "q": "q_click_right",
+            "a": "a_click_right",
+            "c": "c_click_right",
+        }.get(self.side, f"{self.side}_click_right")
         add_btn.clicked.connect(lambda _: self.add_row(default_hotkey, ""))
         add_btn.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
         add_btn.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
@@ -145,7 +146,6 @@ class HotkeyTabManager:
         hotkeylist = hotkey[2:].split("_")
         if len(hotkeylist) % 2 != 0:
             return None
-
         for i in range(0, len(hotkeylist), 2):
             mode = hotkeylist[i]
             btn = hotkeylist[i + 1]
@@ -155,13 +155,11 @@ class HotkeyTabManager:
                 return None
             if mode in ("press", "click") and btn not in OPTS.button:
                 return None
-
             layout.create_dropdown(mode, OPTS.mode, is_mode=True)
             if mode == "wheel":
                 layout.create_dropdown(btn, OPTS.wheel)
             else:
                 layout.create_dropdown(btn, OPTS.button)
-
         return layout
 
     def action_layout(self, action: str) -> Optional[DDConfigLayout]:
@@ -186,6 +184,7 @@ class HotkeyTabManager:
             self.rows_layout.addWidget(container)
             layout.addLayout(hlay)
             layout.addLayout(alay)
+
             layout_tuple = (hlay, alay)
             self.layouts.append(layout_tuple)
 
@@ -210,10 +209,12 @@ class HotkeyTabManager:
         for row in self.layouts:
             hotkey_layout = row[0]
             action_layout = row[1]
+
             hotkey_str = self.side  # type: str
             for dd in hotkey_layout.dropdowns:
                 hotkey_str += "_" + dd.currentText()
             hotkey_str = self.sort_hotkey_btn(hotkey_str)
+
             action_str = action_layout.dropdowns[0].currentText()
             hotkeys_data[hotkey_str] = action_str
 
@@ -221,18 +222,15 @@ class HotkeyTabManager:
     def sort_hotkey_btn(hotkey_str: str) -> str:
         """Sort button order for 'press' in hotkey_str."""
         hotkeylist = hotkey_str.split("_")
-
         if len(hotkeylist) - 1 <= 4:
             # Doesn't have multiple 'press'
             return hotkey_str
 
         btns: List[str] = []
         btn_names = [b.name for b in Button]
-
         for i in range(1, len(hotkeylist) - 2, 2):
             btn = hotkeylist[i + 1]
             btns.append(btn)
-
         btns = sorted(btns, key=lambda x: btn_names.index(x))
 
         new_hotkey_str = "{}_".format(hotkeylist[0])
@@ -240,7 +238,6 @@ class HotkeyTabManager:
             new_hotkey_str += "press_"
             new_hotkey_str += "{}_".format(btn)
         new_hotkey_str += "{}_{}".format(hotkeylist[-2], hotkeylist[-1])
-
         return new_hotkey_str
 
 
@@ -254,15 +251,20 @@ def hotkey_tabs(conf_window: ConfigWindow) -> None:
     o_tab = conf_window.add_tab("Overview Hotkeys")
     o_manager = HotkeyTabManager(o_tab, "o")
 
+    c_tab = conf_window.add_tab("Congratulations Hotkeys")
+    c_manager = HotkeyTabManager(c_tab, "c")
+
     conf_window.widget_updates.append(q_manager.on_update)
     conf_window.widget_updates.append(a_manager.on_update)
     conf_window.widget_updates.append(o_manager.on_update)
+    conf_window.widget_updates.append(c_manager.on_update)
 
     def save_hotkeys() -> None:
         hotkeys: Dict[str, str] = {}
         q_manager.get_data(hotkeys)
         a_manager.get_data(hotkeys)
         o_manager.get_data(hotkeys)
+        c_manager.get_data(hotkeys)
         conf_window.conf.set("shortcuts", hotkeys)
 
     conf_window.execute_on_save(save_hotkeys)
@@ -275,5 +277,6 @@ def on_window_open(conf_window: ConfigWindow) -> None:
 conf = ConfigManager()
 conf.use_custom_window()
 conf.on_window_open(on_window_open)
+
 conf.add_config_tab(general_tab)
 conf.add_config_tab(hotkey_tabs)

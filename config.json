@@ -9,7 +9,9 @@
     "a_wheel_down": "good",
     "a_press_middle_wheel_up": "hard",
     "a_press_middle_wheel_down": "easy",
-    "o_wheel_down": "study_now"
+    "o_wheel_down": "study_now",
+    "o_click_right": "deck_browser",
+    "c_click_right": "deck_browser"
   },
   "default_enabled": true,
   "threshold_wheel_ms": 350,
