@@ -47,24 +47,20 @@ def toggle_on_off() -> None:
         manager.enable()
         tooltip("Enabled hotmouse")
 
+# event.py
 
 def answer_again() -> None:
-    if mw.reviewer.state == "question":
-        mw.reviewer.state = "answer"
+    if mw.reviewer.state == "answer":
         mw.reviewer._answerCard(1)
 
-
 def answer_hard() -> None:
-    if mw.reviewer.state == "question":
-        mw.reviewer.state = "answer"
+    if mw.reviewer.state == "answer":
         cnt = mw.col.sched.answerButtons(mw.reviewer.card)
         if cnt == 4:
             mw.reviewer._answerCard(2)
 
-
 def answer_good() -> None:
-    if mw.reviewer.state == "question":
-        mw.reviewer.state = "answer"
+    if mw.reviewer.state == "answer":
         cnt = mw.col.sched.answerButtons(mw.reviewer.card)
         if cnt == 2:
             mw.reviewer._answerCard(2)
@@ -73,10 +69,8 @@ def answer_good() -> None:
         elif cnt == 4:
             mw.reviewer._answerCard(3)
 
-
 def answer_easy() -> None:
-    if mw.reviewer.state == "question":
-        mw.reviewer.state = "answer"
+    if mw.reviewer.state == "answer":
         cnt = mw.col.sched.answerButtons(mw.reviewer.card)
         if cnt == 3:
             mw.reviewer._answerCard(3)
