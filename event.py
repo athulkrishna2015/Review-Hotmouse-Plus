@@ -343,6 +343,43 @@ class HotmouseEventFilter(QObject):
 
         # Native Qt wheel only used during reviewer; Overview wheel comes via JS
         if mw.state == "review" and event.type() == QEvent.Type.Wheel:
+            if isinstance(event, QWheelEvent):
+                # 1. Scrollbar check
+                if config.get("wheel_ignore_scrollbar", True):
+                    width = 0
+                    if hasattr(obj, "width") and isinstance(obj.width, (int, float)):
+                        width = obj.width
+                    elif hasattr(obj, "width") and callable(obj.width):
+                        width = obj.width()
+                    elif hasattr(obj, "geometry"):
+                        width = obj.geometry().width()
+
+                    if width > 0:
+                        try:
+                            # Qt6
+                            x = event.position().x()
+                        except AttributeError:
+                            # Qt5
+                            x = event.pos().x()
+
+                        if x > width - 30:
+                            return False
+
+                # 2. Bottom bar check (only relevant in review)
+                if config.get("wheel_only_on_bottom_bar", False) and mw.state == "review":
+                    is_bottom = False
+                    curr = obj
+                    while curr:
+                        if curr == mw.bottomWeb:
+                            is_bottom = True
+                            break
+                        try:
+                            curr = curr.parent()
+                        except AttributeError:
+                            break
+                    if not is_bottom:
+                        return False
+
             if manager.has_wheel_hotkey and manager.on_mouse_scroll(event):  # type: ignore[arg-type]
                 return True
 
@@ -398,6 +435,17 @@ def handle_js_message(
     req = json.loads(message[len(addon_key) :])  # type: Dict[str, Any]
 
     if req.get("key") == "wheel":
+        # Check if we should ignore this wheel event based on location
+        if config.get("wheel_ignore_scrollbar", True) and req.get("is_scrollbar"):
+            return (False, None)
+
+        if (
+            config.get("wheel_only_on_bottom_bar", False)
+            and not req.get("is_bottom")
+            and mw.state == "review"
+        ):
+            return (False, None)
+
         wheel_dir = WheelDir.from_web(int(req.get("value", 0)))
         if wheel_dir is None:
             return (False, None)

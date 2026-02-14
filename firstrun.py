@@ -47,13 +47,44 @@ class Version:
         return self == other or self < other
 
 
+from aqt.utils import showText
+import re
+
+def show_changelog(prev_ver: Version) -> None:
+    version_file = Path(__file__).parent / "VERSION"
+    curr_version_str = version_file.read_text().strip()
+    
+    # If it's the very first install from scratch (major/minor -1), 
+    # we might not want to show the changelog, or we might.
+    # The user said "when updated", so usually that means prev_ver != -1.-1
+    if prev_ver == curr_version_str:
+        return
+
+    readme_file = Path(__file__).parent / "README.md"
+    if not readme_file.exists():
+        return
+
+    content = readme_file.read_text(encoding="utf-8")
+    # Try to find the changelog section
+    match = re.search(r"# Changelog\s*(.*)", content, re.DOTALL)
+    if match:
+        changelog_text = match.group(1).strip()
+        # showText in Anki supports markdown and will render it as HTML
+        showText(f"### Review Hotmouse Updated to {curr_version_str}\n\n{changelog_text}", title="Review Hotmouse Updated", type="markdown")
+
 def save_current_version_to_conf() -> None:
     # For debugging
     version_string = os.environ.get("REVIEW_HOTMOUSE_VERSION")
     if not version_string:
         version_file = Path(__file__).parent / "VERSION"
-        version_string = version_file.read_text()
-    if version_string != prev_version:
+        version_string = version_file.read_text().strip()
+    
+    if version_string != f"{prev_version.major}.{prev_version.minor}":
+        # Only show changelog if it was actually an update (not first install)
+        # If user wants it on first install too, remove the -1.-1 check
+        if prev_version != "-1.-1":
+            show_changelog(prev_version)
+        
         config["version"]["major"] = int(version_string.split(".")[0])
         config["version"]["minor"] = int(version_string.split(".")[1])
         mw.addonManager.writeConfig(__name__, config)

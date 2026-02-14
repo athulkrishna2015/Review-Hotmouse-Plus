@@ -31,6 +31,18 @@ def general_tab(conf_window: ConfigWindow) -> None:
         "If you uncheck this box, the add-on will start as turned off when Anki is launched",
     )
 
+    tab.checkbox(
+        "wheel_ignore_scrollbar",
+        "Ignore wheel on side scroll bar",
+        "Allow normal scrolling when the mouse is over the side scroll bar area.",
+    )
+
+    tab.checkbox(
+        "wheel_only_on_bottom_bar",
+        "Wheel hotkeys only on bottom bar",
+        "Only trigger wheel actions when the mouse is over the bottom rating bar.",
+    )
+
     # Removed old right-click checkboxes; use the Overview/Congrats tabs to bind actions.
     tab.checkbox("tooltip", "When triggered, show action name")
     tab.checkbox("z_debug", "Debugging: Show hotkey on mouse action")

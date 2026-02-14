@@ -8,8 +8,13 @@ This add-on pairs well with [Deck Centerer](https://ankiweb.net/shared/info/1520
 ## Configuration
 
 Open Tools → Add‑ons → Review Hotmouse → Config and use the tabs:
-- Overview Hotkeys: add/edit `o_*` mappings (for example, `o_click_right → deck_browser`, `o_wheel_down → study_now`).  
-- Congratulations Hotkeys: add/edit `c_*` mappings (for example, `c_click_right → deck_browser`).  
+- General: Configure thresholds and scrolling behavior.
+    - **Mouse scroll threshold**: Delay between subsequent scroll actions.
+    - **Mouse click threshold**: Delay between subsequent clicks (0 for instant).
+    - **Ignore wheel on side scroll bar**: If enabled, allows normal scrolling when the mouse is over the side scrollbar area.
+    - **Wheel hotkeys only on bottom bar**: If enabled, mouse wheel actions only trigger hotkeys when the pointer is over the bottom rating bar, allowing normal scrolling everywhere else.
+- Overview Hotkeys: add/edit `o_*` mappings.
+- Congratulations Hotkeys: add/edit `c_*` mappings.
 - Question/Answer Hotkeys: unchanged; continue to use again/hard/good/easy/undo/etc.  
 
 ## Acknowledgments
@@ -25,6 +30,13 @@ For more info read original [description](https://ankiweb.net/shared/info/192834
 
 
 # Changelog
+
+## [2.13] 2026-02-14
+
+- Added optional support for mouse scrolling in the Reviewer and Overview.
+- New setting: **Ignore wheel on side scroll bar** allows normal scrolling when the pointer is over the scrollbar area.
+- New setting: **Wheel hotkeys only on bottom bar** restricts hotmouse actions to the bottom rating bar, allowing normal scrolling in the main card area.
+- Updated `detect_wheel.js` to intelligently detect mouse position and element context.
 
 ## [2.5.3] 2025-11-06
 
