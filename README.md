@@ -31,7 +31,7 @@ For more info read original [description](https://ankiweb.net/shared/info/192834
 
 # Changelog
 
-## [2.13] 2026-02-14
+## [2.6] 2026-02-14
 
 - Added optional support for mouse scrolling in the Reviewer and Overview.
 - New setting: **Ignore wheel on side scroll bar** allows normal scrolling when the pointer is over the scrollbar area.
