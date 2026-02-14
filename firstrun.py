@@ -80,10 +80,8 @@ def save_current_version_to_conf() -> None:
         version_string = version_file.read_text().strip()
     
     if version_string != f"{prev_version.major}.{prev_version.minor}":
-        # Only show changelog if it was actually an update (not first install)
-        # If user wants it on first install too, remove the -1.-1 check
-        if prev_version != "-1.-1":
-            show_changelog(prev_version)
+        # Show changelog on both updates and new installs
+        show_changelog(prev_version)
         
         config["version"]["major"] = int(version_string.split(".")[0])
         config["version"]["minor"] = int(version_string.split(".")[1])
